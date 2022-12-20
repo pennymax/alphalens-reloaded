@@ -1072,7 +1072,9 @@ def factor_positions(
         portfolio_data, long_short, group_neutral, equal_weight
     )
 
-    return positions(weights, period)
+    date_idx = factor_data.index.names.index("date")
+    freq = factor_data.index.levels[date_idx].freq
+    return positions(weights, period, freq=freq)
 
 
 def create_pyfolio_input(

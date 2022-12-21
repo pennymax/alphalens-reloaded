@@ -528,7 +528,7 @@ def create_full_tear_sheet(
 @plotting.customize
 def create_event_returns_tear_sheet(
     factor_data,
-    returns,
+    prices,
     avgretplot=(5, 15),
     long_short=True,
     group_neutral=False,
@@ -569,7 +569,7 @@ def create_event_returns_tear_sheet(
 
     avg_cumulative_returns = perf.average_cumulative_return_by_quantile(
         factor_data,
-        returns,
+        prices,
         periods_before=before,
         periods_after=after,
         demeaned=long_short,
@@ -611,7 +611,7 @@ def create_event_returns_tear_sheet(
 
         avg_cumret_by_group = perf.average_cumulative_return_by_quantile(
             factor_data,
-            returns,
+            prices,
             periods_before=before,
             periods_after=after,
             demeaned=long_short,

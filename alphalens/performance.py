@@ -691,7 +691,7 @@ def factor_rank_autocorrelation(factor_data, period=1):
 
 def common_start_returns(
     factor,
-    returns,
+    prices,
     before,
     after,
     cumulative=False,
@@ -737,8 +737,12 @@ def common_start_returns(
         Dataframe containing returns series for each factor aligned to the same
         index: -before to after
     """
-    if not cumulative:
-        returns = returns.apply(cumulative_returns, axis=0)
+    # if not cumulative:
+    #     returns = returns.apply(cumulative_returns, axis=0)
+    if cumulative:
+        returns = prices
+    else:
+        returns = prices.pct_change(axis=0)
 
     all_returns = []
 
@@ -768,6 +772,9 @@ def common_start_returns(
             starting_index - day_zero_index, ending_index - day_zero_index
         )
 
+        if cumulative:
+            series = (series / series.loc[0, :]) - 1
+
         if demean_by is not None:
             mean = series.loc[:, demean_equities].mean(axis=1)
             series = series.loc[:, equities]
@@ -783,7 +790,7 @@ def common_start_returns(
 
 def average_cumulative_return_by_quantile(
     factor_data,
-    returns,
+    prices,
     periods_before=10,
     periods_after=15,
     demeaned=True,
@@ -847,7 +854,7 @@ def average_cumulative_return_by_quantile(
     def cumulative_return_around_event(q_fact, demean_by):
         return common_start_returns(
             q_fact,
-            returns,
+            prices,
             periods_before,
             periods_after,
             cumulative=True,

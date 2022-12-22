@@ -773,7 +773,8 @@ def common_start_returns(
         )
 
         if cumulative:
-            series = (series / series.loc[0, :]) - 1
+            series.loc[1:, :] = (series.loc[1:, :] / series.loc[0, :]) - 1
+            series.loc[:0, :] = (series.loc[0, :] / series.loc[:0, :]) - 1
 
         if demean_by is not None:
             mean = series.loc[:, demean_equities].mean(axis=1)

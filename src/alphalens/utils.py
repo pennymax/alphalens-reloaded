@@ -480,6 +480,7 @@ def get_clean_factor(
     groupby_labels=None,
     max_loss=0.35,
     zero_aware=False,
+    use_log=False
 ):
     """
     Formats the factor data, forward return data, and group mappings into a
@@ -662,8 +663,12 @@ def get_clean_factor(
     fwdret_loss = (initial_amount - fwdret_amount) / initial_amount
     bin_loss = tot_loss - fwdret_loss
 
-    # print(
-    logging.info(
+    if use_log:
+        log = logging.info
+    else:
+        log = print
+    
+    log(
         "Dropped %.1f%% entries from factor data: %.1f%% in forward "
         "returns computation and %.1f%% in binning phase "
         "(set max_loss=0 to see potentially suppressed Exceptions)."
@@ -677,8 +682,7 @@ def get_clean_factor(
         )
         raise MaxLossExceededError(message)
     else:
-        # print("max_loss is %.1f%%, not exceeded: OK!" % (max_loss * 100))
-        logging.info("max_loss is %.1f%%, not exceeded: OK!" % (max_loss * 100))
+        log("max_loss is %.1f%%, not exceeded: OK!" % (max_loss * 100))
 
     return merged_data
 
@@ -696,6 +700,7 @@ def get_clean_factor_and_forward_returns(
     max_loss=0.35,
     zero_aware=False,
     cumulative_returns=True,
+    use_log=False
 ):
     """
     Formats the factor data, pricing data, and group mappings into a DataFrame
@@ -861,6 +866,7 @@ def get_clean_factor_and_forward_returns(
         binning_by_group=binning_by_group,
         max_loss=max_loss,
         zero_aware=zero_aware,
+        use_log=use_log
     )
     return factor_data
 

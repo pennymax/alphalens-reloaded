@@ -17,6 +17,7 @@ import pandas as pd
 import numpy as np
 import re
 import warnings
+import logging
 
 from IPython.display import display
 from pandas.tseries.offsets import (
@@ -661,7 +662,8 @@ def get_clean_factor(
     fwdret_loss = (initial_amount - fwdret_amount) / initial_amount
     bin_loss = tot_loss - fwdret_loss
 
-    print(
+    # print(
+    logging.info(
         "Dropped %.1f%% entries from factor data: %.1f%% in forward "
         "returns computation and %.1f%% in binning phase "
         "(set max_loss=0 to see potentially suppressed Exceptions)."
@@ -675,7 +677,8 @@ def get_clean_factor(
         )
         raise MaxLossExceededError(message)
     else:
-        print("max_loss is %.1f%%, not exceeded: OK!" % (max_loss * 100))
+        # print("max_loss is %.1f%%, not exceeded: OK!" % (max_loss * 100))
+        logging.info("max_loss is %.1f%%, not exceeded: OK!" % (max_loss * 100))
 
     return merged_data
 

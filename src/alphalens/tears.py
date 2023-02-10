@@ -258,11 +258,12 @@ def create_returns_tear_sheet(
 
     trading_calendar = factor_data.index.levels[0].freq
     if trading_calendar is None:
-        trading_calendar = pd.tseries.offsets.BDay()
-        warnings.warn(
-            "'freq' not set in factor_data index: assuming business day",
-            UserWarning,
-        )
+        # trading_calendar = pd.tseries.offsets.BDay()
+        # warnings.warn(
+        #     "'freq' not set in factor_data index: assuming business day",
+        #     UserWarning,
+        # )
+        raise Exception("'freq' not set in factor_data index")
 
     # Compute cumulative returns from daily simple returns, if '1D'
     # returns are provided.
@@ -501,7 +502,8 @@ def create_full_tear_sheet(
     create_information_tear_sheet(
         factor_data, group_neutral, by_group, set_context=False
     )
-    create_turnover_tear_sheet(factor_data, set_context=False)
+    ## disabel turnover sheet for now as something fixed needed for hours freq
+    # create_turnover_tear_sheet(factor_data, set_context=False)
 
 
 @plotting.customize
@@ -696,11 +698,12 @@ def create_event_study_tear_sheet(
 
     trading_calendar = factor_data.index.levels[0].freq
     if trading_calendar is None:
-        trading_calendar = pd.tseries.offsets.BDay()
-        warnings.warn(
-            "'freq' not set in factor_data index: assuming business day",
-            UserWarning,
-        )
+        # trading_calendar = pd.tseries.offsets.BDay()
+        # warnings.warn(
+        #     "'freq' not set in factor_data index: assuming business day",
+        #     UserWarning,
+        # )
+        raise Exception("'freq' not set in factor_data index")
 
     plt.show()
     gf.close()

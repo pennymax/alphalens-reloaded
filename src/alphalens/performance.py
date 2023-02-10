@@ -203,7 +203,8 @@ def factor_weights(factor_data, demeaned=True, group_adjust=False, equal_weight=
         weights = weights.groupby(level="date", group_keys=False).apply(
             to_weights, False, False
         )
-
+    ## add this to let hours freq go
+    weights.index.freq = factor_data.index.levels[0].freq
     return weights
 
 
@@ -258,7 +259,9 @@ def factor_returns(
         # requires at least one weighted return
         # otherwise returns np.nan
         returns = weighted_returns.groupby(level="date").sum(min_count=1).asfreq(freq)
-
+    
+    ## add this to let hours freq go
+    returns.index.freq = factor_data.index.levels[0].freq
     return returns
 
 
@@ -395,8 +398,8 @@ def positions(weights, period, freq=None):
             2004-01-12 15:30:00   14874.5400     -15841.2500       0.0
             2004-01-13 10:30:00   -13853.2800    13653.6400      -43.6375
     """
-
-    weights = weights.unstack()
+    ## change to below to let hours freq go
+    # weights = weights.unstack()
 
     if not isinstance(period, pd.Timedelta):
         period = pd.Timedelta(period)
@@ -407,6 +410,8 @@ def positions(weights, period, freq=None):
     if freq is None:
         freq = BDay()
         warnings.warn("'freq' not set, using business day calendar", UserWarning)
+    
+    weights = weights.unstack()
 
     #
     # weights index contains factor computation timestamps, then add returns
@@ -974,11 +979,11 @@ def factor_cumulative_returns(
 
     returns = factor_returns(portfolio_data, long_short, group_neutral, equal_weight)
 
-    if period == '1D':
-        # print('--> run in simple cum return mode (1D)')
+    if period == returns.index.freq:
+        print(f'--> run in simple cum return mode ({period})')
         cum_ret = cumulative_returns(returns[period])
     else:
-        # print('--> run in subportfolio cum return mode (non-1D)')
+        print(f'--> run in subportfolio cum return mode ({period})')
         cum_ret = subportfolio_cumulative_returns(returns[period], period)
     return cum_ret
 
